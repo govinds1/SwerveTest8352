@@ -5,8 +5,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.swerve.SwerveDrive;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -19,6 +21,9 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
+  private SwerveDrive m_swerveDrive = new SwerveDrive();
+  private XboxController m_xboxController = new XboxController(0);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -78,7 +83,13 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    double forward = -m_xboxController.getLeftY();
+    double right = m_xboxController.getLeftX();
+    double rot = m_xboxController.getRightX();
+
+    m_swerveDrive.Drive(right, forward, rot);
+  }
 
   /** This function is called once when the robot is disabled. */
   @Override
