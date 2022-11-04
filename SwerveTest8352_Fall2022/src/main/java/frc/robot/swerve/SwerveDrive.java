@@ -26,7 +26,7 @@ public class SwerveDrive {
     ChassisSpeeds m_desiredSpeeds;
     ChassisSpeeds m_trueSpeeds;
 
-    ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
+    //ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
     boolean fieldRelative = false;
 
     public SwerveDrive() {
@@ -98,7 +98,7 @@ public class SwerveDrive {
         double vxMpS = Units.feetToMeters(vxFeetPerSecond);
         double vyMpS = Units.feetToMeters(vyFeetPerSecond);
         if (fieldRelative) {
-            SetDesiredSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(vxMpS, vyMpS, omega, GetAngle()));
+            //SetDesiredSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(vxMpS, vyMpS, omega, GetAngle()));
         } else {
             ChassisSpeeds newSpeeds = new ChassisSpeeds();
             newSpeeds.vxMetersPerSecond = vxMpS;
@@ -127,13 +127,13 @@ public class SwerveDrive {
         fieldRelative = fieldRel;
     }
 
-    public void ResetGyro() {
-        m_gyro.reset();
-    }
+    // public void ResetGyro() {
+    //     m_gyro.reset();
+    // }
 
-    public Rotation2d GetAngle() {
-        return m_gyro.getRotation2d();
-    }
+    // public Rotation2d GetAngle() {
+    //     return m_gyro.getRotation2d();
+    // }
 
     public ChassisSpeeds GetDesiredSpeeds() {
         return m_desiredSpeeds;
