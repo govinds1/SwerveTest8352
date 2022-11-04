@@ -2,7 +2,7 @@ package frc.robot;
 
 public final class Calibrations {
     // Steer PID Values
-    public static final double STEER_P = 0;
+    public static final double STEER_P = 0.1;
     public static final double STEER_I = 0;
     public static final double STEER_D = 0;
 

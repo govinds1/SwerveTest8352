@@ -1,5 +1,10 @@
 package frc.robot.swerve;
 
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -9,8 +14,8 @@ import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc.robot.Calibrations;
 
 public class WheelModule {
-    private Spark m_driveMotor;
-    private Spark m_steerMotor;
+    private TalonSRX m_driveMotor;
+    private VictorSPX m_steerMotor;
 
     private PIDController m_steerPID;
     private Encoder m_steerEncoder;
@@ -19,8 +24,8 @@ public class WheelModule {
     SwerveModuleState m_desiredState;
 
     public WheelModule(int driveMotorID, int steerMotorID, int[] steerEncoderChannels, int steerEncoderZero) {
-        m_driveMotor = new Spark(driveMotorID);
-        m_steerMotor = new Spark(steerMotorID);
+        m_driveMotor = new TalonSRX(driveMotorID);
+        m_steerMotor = new VictorSPX(steerMotorID);
 
         m_steerEncoder = new Encoder(steerEncoderChannels[0], steerEncoderChannels[1]);
         m_steerEncoder.setDistancePerPulse(Calibrations.STEER_ENCODER_RADIAN_PER_PULSE); // PG Encoder
@@ -34,11 +39,11 @@ public class WheelModule {
      
     public void periodic() {
         // Calculate angle PID output using desired state angle and set motor output
-        m_steerMotor.set(m_steerPID.calculate(GetAngle().getRadians(), m_desiredState.angle.getRadians()));
+        m_steerMotor.set(VictorSPXControlMode.PercentOutput, m_steerPID.calculate(GetAngle().getRadians(), m_desiredState.angle.getRadians()));
   
         // Set drive velocity reference
         //m_drivePIDController.setReference(Units.metersToFeet(m_desiredState.speedMetersPerSecond), ControlType.kVelocity);
-        m_driveMotor.set(Units.metersToFeet(m_desiredState.speedMetersPerSecond) / (Calibrations.MAX_FORWARD_SPEED + Calibrations.MAX_STRAFE_SPEED)); // NOT ACCURATE(probably)!!
+        m_driveMotor.set(TalonSRXControlMode.PercentOutput, Units.metersToFeet(m_desiredState.speedMetersPerSecond) / (Calibrations.MAX_FORWARD_SPEED + Calibrations.MAX_STRAFE_SPEED)); // NOT ACCURATE(probably)!!
       }
   
       public void ResetState() {
