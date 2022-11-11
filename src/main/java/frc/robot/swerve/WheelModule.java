@@ -3,6 +3,7 @@ package frc.robot.swerve;
 import java.io.Console;
 
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonSRXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
@@ -34,6 +35,7 @@ public class WheelModule {
         m_steerEncoder.setDistancePerPulse(Calibrations.STEER_ENCODER_RADIAN_PER_PULSE); // PG Encoder
         m_steerEncoderZero = steerEncoderZero;
         m_steerPID = new PIDController(Calibrations.STEER_P, Calibrations.STEER_I, Calibrations.STEER_D);
+        
     }
 
     public void init() {
@@ -42,15 +44,13 @@ public class WheelModule {
      
     public void periodic() {
         if (m_desiredState != null) {
-            // Calculate angle PID output using desired state angle and set motor output
-            m_steerMotor.set(TalonSRXControlMode.PercentOutput, m_steerPID.calculate(GetAngle().getRadians(), m_desiredState.angle.getRadians()));
-
-            // Set drive velocity reference
-            //m_drivePIDController.setReference(Units.metersToFeet(m_desiredState.speedMetersPerSecond), ControlType.kVelocity);
-        
             System.out.print(m_desiredState.speedMetersPerSecond);
             System.out.print(m_desiredState.angle.getDegrees());
-            m_driveMotor.set(VictorSPXControlMode.PercentOutput, Units.metersToFeet(m_desiredState.speedMetersPerSecond) / (Calibrations.MAX_FORWARD_SPEED + Calibrations.MAX_STRAFE_SPEED)); // NOT ACCURATE(probably)!!
+
+            // Calculate angle PID output using desired state angle and set motor output
+            Steer(m_steerPID.calculate(GetAngle().getRadians(), m_desiredState.angle.getRadians()));
+            //Drive(m_desiredState.speedMetersPerSecond);
+            Drive(Units.metersToFeet(m_desiredState.speedMetersPerSecond) / (Calibrations.MAX_FORWARD_SPEED + Calibrations.MAX_STRAFE_SPEED)); // NOT ACCURATE(probably)!!
         }
       }
   
