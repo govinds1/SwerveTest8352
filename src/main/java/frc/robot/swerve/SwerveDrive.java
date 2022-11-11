@@ -8,6 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Calibrations;
 import frc.robot.RobotMap;
 
@@ -46,6 +47,16 @@ public class SwerveDrive {
         m_leftRear.periodic();
         m_rightFront.periodic();
         m_rightRear.periodic();
+
+        // Dashboard prints
+        SmartDashboard.putNumber("Swerve/LeftFront/DesiredAngle", m_leftFront.GetDesiredState().angle.getDegrees());
+        SmartDashboard.putNumber("Swerve/LeftRear/DesiredAngle", m_leftRear.GetDesiredState().angle.getDegrees());
+        SmartDashboard.putNumber("Swerve/RightFront/DesiredAngle", m_rightFront.GetDesiredState().angle.getDegrees());
+        SmartDashboard.putNumber("Swerve/RightRear/DesiredAngle", m_rightRear.GetDesiredState().angle.getDegrees());
+        SmartDashboard.putNumber("Swerve/LeftFront/DesiredSpeed", m_leftFront.GetDesiredState().speedMetersPerSecond);
+        SmartDashboard.putNumber("Swerve/LeftRear/DesiredSpeed", m_leftRear.GetDesiredState().speedMetersPerSecond);
+        SmartDashboard.putNumber("Swerve/RightFront/DesiredSpeed", m_rightFront.GetDesiredState().speedMetersPerSecond);
+        SmartDashboard.putNumber("Swerve/RightRear/DesiredSpeed", m_rightRear.GetDesiredState().speedMetersPerSecond);
       }
 
     // Takes direct input from controller axes, handle conversions to real units and proper robot coordinates in this function

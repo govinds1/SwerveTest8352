@@ -44,9 +44,6 @@ public class WheelModule {
      
     public void periodic() {
         if (m_desiredState != null) {
-            System.out.print(m_desiredState.speedMetersPerSecond);
-            System.out.print(m_desiredState.angle.getDegrees());
-
             // Calculate angle PID output using desired state angle and set motor output
             Steer(m_steerPID.calculate(GetAngle().getRadians(), m_desiredState.angle.getRadians()));
             //Drive(m_desiredState.speedMetersPerSecond);
