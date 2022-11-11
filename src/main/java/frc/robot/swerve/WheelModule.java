@@ -1,9 +1,6 @@
 package frc.robot.swerve;
 
-import java.io.Console;
-
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
-import com.ctre.phoenix.motorcontrol.TalonSRXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
@@ -13,8 +10,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Calibrations;
 
 public class WheelModule {
@@ -23,9 +18,9 @@ public class WheelModule {
 
     private PIDController m_steerPID;
     private Encoder m_steerEncoder;
-    private int m_steerEncoderZero;
+    private int m_steerEncoderZero = 0;
 
-    SwerveModuleState m_desiredState;
+    SwerveModuleState m_desiredState = new SwerveModuleState(0, new Rotation2d(0));
 
     public WheelModule(int driveMotorID, int steerMotorID, int[] steerEncoderChannels, int steerEncoderZero) {
         m_driveMotor = new VictorSPX(driveMotorID);
@@ -36,10 +31,11 @@ public class WheelModule {
         m_steerEncoderZero = steerEncoderZero;
         m_steerPID = new PIDController(Calibrations.STEER_P, Calibrations.STEER_I, Calibrations.STEER_D);
         
+        ResetState();
     }
 
     public void init() {
-
+        ResetState();
     }
      
     public void periodic() {
