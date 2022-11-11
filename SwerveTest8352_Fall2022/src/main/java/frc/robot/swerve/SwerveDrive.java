@@ -59,6 +59,15 @@ public class SwerveDrive {
             -right * Calibrations.MAX_STRAFE_SPEED,
             -turn * Calibrations.MAX_TURN_SPEED
         );
+        
+        /*m_leftRear.Drive(forward);
+        m_leftFront.Drive(forward);
+        m_rightRear.Drive(forward);
+        m_rightFront.Drive(forward);
+        m_leftRear.Steer(turn);
+        m_leftFront.Steer(turn);
+        m_rightRear.Steer(turn);
+        m_rightFront.Steer(turn);*/
     }
 
     public void Drive(double forward, double right, double turn, boolean driveFieldRelative) {

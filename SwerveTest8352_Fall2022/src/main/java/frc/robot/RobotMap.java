@@ -15,8 +15,8 @@ public final class RobotMap {
     public static final int RIGHT_REAR_STEER_ID = 8;
     
     // Encoder Ports
-    public static final int[] LEFT_FRONT_STEER_ENCODER_CHANNELS = {0, 1};
-    public static final int[] LEFT_REAR_STEER_ENCODER_CHANNELS = {2, 3};
+    public static final int[] LEFT_FRONT_STEER_ENCODER_CHANNELS = {6, 7};
+    public static final int[] LEFT_REAR_STEER_ENCODER_CHANNELS = {0, 1};
     public static final int[] RIGHT_FRONT_STEER_ENCODER_CHANNELS = {4, 5};
-    public static final int[] RIGHT_REAR_STEER_ENCODER_CHANNELS = {6, 7};
+    public static final int[] RIGHT_REAR_STEER_ENCODER_CHANNELS = {2, 3};
 }

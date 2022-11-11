@@ -84,6 +84,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    m_swerveDrive.periodic();
+
     double forward = -m_xboxController.getLeftY();
     double right = m_xboxController.getLeftX();
     double rot = m_xboxController.getRightX();

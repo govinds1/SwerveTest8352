@@ -1,5 +1,7 @@
 package frc.robot.swerve;
 
+import java.io.Console;
+
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -11,11 +13,12 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Calibrations;
 
 public class WheelModule {
-    private TalonSRX m_driveMotor;
-    private VictorSPX m_steerMotor;
+    private VictorSPX m_driveMotor;
+    private TalonSRX m_steerMotor;
 
     private PIDController m_steerPID;
     private Encoder m_steerEncoder;
@@ -24,8 +27,8 @@ public class WheelModule {
     SwerveModuleState m_desiredState;
 
     public WheelModule(int driveMotorID, int steerMotorID, int[] steerEncoderChannels, int steerEncoderZero) {
-        m_driveMotor = new TalonSRX(driveMotorID);
-        m_steerMotor = new VictorSPX(steerMotorID);
+        m_driveMotor = new VictorSPX(driveMotorID);
+        m_steerMotor = new TalonSRX(steerMotorID);
 
         m_steerEncoder = new Encoder(steerEncoderChannels[0], steerEncoderChannels[1]);
         m_steerEncoder.setDistancePerPulse(Calibrations.STEER_ENCODER_RADIAN_PER_PULSE); // PG Encoder
@@ -38,12 +41,17 @@ public class WheelModule {
     }
      
     public void periodic() {
-        // Calculate angle PID output using desired state angle and set motor output
-        m_steerMotor.set(VictorSPXControlMode.PercentOutput, m_steerPID.calculate(GetAngle().getRadians(), m_desiredState.angle.getRadians()));
-  
-        // Set drive velocity reference
-        //m_drivePIDController.setReference(Units.metersToFeet(m_desiredState.speedMetersPerSecond), ControlType.kVelocity);
-        m_driveMotor.set(TalonSRXControlMode.PercentOutput, Units.metersToFeet(m_desiredState.speedMetersPerSecond) / (Calibrations.MAX_FORWARD_SPEED + Calibrations.MAX_STRAFE_SPEED)); // NOT ACCURATE(probably)!!
+        if (m_desiredState != null) {
+            // Calculate angle PID output using desired state angle and set motor output
+            m_steerMotor.set(TalonSRXControlMode.PercentOutput, m_steerPID.calculate(GetAngle().getRadians(), m_desiredState.angle.getRadians()));
+
+            // Set drive velocity reference
+            //m_drivePIDController.setReference(Units.metersToFeet(m_desiredState.speedMetersPerSecond), ControlType.kVelocity);
+        
+            System.out.print(m_desiredState.speedMetersPerSecond);
+            System.out.print(m_desiredState.angle.getDegrees());
+            m_driveMotor.set(VictorSPXControlMode.PercentOutput, Units.metersToFeet(m_desiredState.speedMetersPerSecond) / (Calibrations.MAX_FORWARD_SPEED + Calibrations.MAX_STRAFE_SPEED)); // NOT ACCURATE(probably)!!
+        }
       }
   
       public void ResetState() {
@@ -56,7 +64,7 @@ public class WheelModule {
   
       public void CalibrateAngle() {
           // Call this function when the wheel faces forward, will set current encoder ticks as the zero variable
-          m_steerEncoderZero = m_steerEncoder.get(); // should be in raw ticks (without conversion) when using quadrature encoder
+          //m_steerEncoderZero = m_steerEncoder.get(); // should be in raw ticks (without conversion) when using quadrature encoder
       }
   
       // Set the desired state of the swerve module -> setpoints from drive input
@@ -71,16 +79,26 @@ public class WheelModule {
       public void SetDesiredState(double feetPerSec, Rotation2d radians) {
           SetDesiredState(new SwerveModuleState(feetPerSec, radians));
       }
+
+      public void Drive(double power) {
+          m_driveMotor.set(VictorSPXControlMode.PercentOutput, power);
+      }
+
+      public void Steer(double power) {
+          m_steerMotor.set(TalonSRXControlMode.PercentOutput, power);
+      }
   
       // Wheel angle of 0 (from a getter function) is considered to be facing forwards
       // Wheel azimuth in encoder pulses
       public int GetRawAngle() {
           return m_steerEncoder.get() - m_steerEncoderZero;
+          //return 0;
       }
   
       // Wheel azimuth in radians
       public Rotation2d GetAngle() {
           return new Rotation2d(m_steerEncoder.getDistance() - (m_steerEncoderZero * m_steerEncoder.getDistancePerPulse()));
+          //return new Rotation2d(0);
       }
   
       public SwerveModuleState GetDesiredState() {
