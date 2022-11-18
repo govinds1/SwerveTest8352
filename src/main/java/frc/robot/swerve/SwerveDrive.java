@@ -18,10 +18,15 @@ public class SwerveDrive {
     WheelModule m_rightFront = new WheelModule(RobotMap.RIGHT_FRONT_DRIVE_ID, RobotMap.RIGHT_FRONT_STEER_ID, RobotMap.RIGHT_FRONT_STEER_ENCODER_CHANNELS, Calibrations.RIGHT_FRONT_ZERO);
     WheelModule m_rightRear = new WheelModule(RobotMap.RIGHT_REAR_DRIVE_ID, RobotMap.RIGHT_REAR_STEER_ID, RobotMap.RIGHT_REAR_STEER_ENCODER_CHANNELS, Calibrations.RIGHT_REAR_ZERO);
 
-    Translation2d m_leftFrontLocation = new Translation2d(Calibrations.WHEELBASE_LENGTH / 2.0, Calibrations.WHEELBASE_WIDTH / 2.0);
-    Translation2d m_leftRearLocation = new Translation2d(-Calibrations.WHEELBASE_LENGTH / 2.0, Calibrations.WHEELBASE_WIDTH / 2.0);
-    Translation2d m_rightFrontLocation = new Translation2d(Calibrations.WHEELBASE_LENGTH / 2.0, -Calibrations.WHEELBASE_WIDTH / 2.0);
-    Translation2d m_rightRearLocation = new Translation2d(-Calibrations.WHEELBASE_LENGTH / 2.0, -Calibrations.WHEELBASE_WIDTH / 2.0);
+    //Translation2d m_leftFrontLocation = new Translation2d(Calibrations.WHEELBASE_LENGTH / 2.0, -Calibrations.WHEELBASE_WIDTH / 2.0);
+    //Translation2d m_leftRearLocation = new Translation2d(-Calibrations.WHEELBASE_LENGTH / 2.0, -Calibrations.WHEELBASE_WIDTH / 2.0);
+    //Translation2d m_rightFrontLocation = new Translation2d(Calibrations.WHEELBASE_LENGTH / 2.0, Calibrations.WHEELBASE_WIDTH / 2.0);
+    //Translation2d m_rightRearLocation = new Translation2d(-Calibrations.WHEELBASE_LENGTH / 2.0, Calibrations.WHEELBASE_WIDTH / 2.0);
+
+    Translation2d m_leftFrontLocation = new Translation2d(-Calibrations.WHEELBASE_WIDTH / 2.0, Calibrations.WHEELBASE_LENGTH / 2.0);
+    Translation2d m_leftRearLocation = new Translation2d(-Calibrations.WHEELBASE_WIDTH / 2.0, -Calibrations.WHEELBASE_LENGTH / 2.0);
+    Translation2d m_rightFrontLocation = new Translation2d(Calibrations.WHEELBASE_WIDTH / 2.0, Calibrations.WHEELBASE_LENGTH / 2.0);
+    Translation2d m_rightRearLocation = new Translation2d(Calibrations.WHEELBASE_WIDTH / 2.0, -Calibrations.WHEELBASE_LENGTH / 2.0);
 
     SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(m_leftFrontLocation, m_leftRearLocation, m_rightFrontLocation, m_rightRearLocation);
     ChassisSpeeds m_desiredSpeeds;
@@ -219,4 +224,10 @@ public class SwerveDrive {
         m_leftRear.SetDesiredState(v_rl, theta_rl);
         m_rightRear.SetDesiredState(v_rr, theta_rr);
     }
+    public void PrintRawAngles() {
+        SmartDashboard.putNumber("Swerve/LeftFront/RawAngle", m_leftFront.GetRawAngle());
+        SmartDashboard.putNumber("Swerve/LeftRear/RawAngle", m_leftRear.GetRawAngle());
+        SmartDashboard.putNumber("Swerve/RightFront/RawAngle", m_rightFront.GetRawAngle());
+        SmartDashboard.putNumber("Swerve/RightRear/RawAngle", m_rightRear.GetRawAngle());
+      }
 }
