@@ -81,17 +81,19 @@ public class WheelModule {
           m_steerMotor.set(TalonSRXControlMode.PercentOutput, power);
       }
   
-      // Wheel angle of 0 (from a getter function) is considered to be facing forwards
-      // Wheel azimuth in encoder pulses
-      public int GetRawAngle() {
-          return m_steerEncoder.get() - m_steerEncoderZero;
-          //return 0;
+      // Return raw encoder units with no offset
+      public int GetRaw() {
+          return m_steerEncoder.get();
+      }
+
+      // Return raw encoder units with offset
+      public int GetRawWithOffset() {
+          return GetRaw() - m_steerEncoderZero;
       }
   
-      // Wheel azimuth in radians
+      // Return wheel steer angle with offset
       public Rotation2d GetAngle() {
           return new Rotation2d(m_steerEncoder.getDistance() - (m_steerEncoderZero * m_steerEncoder.getDistancePerPulse()));
-          //return new Rotation2d(0);
       }
   
       public SwerveModuleState GetDesiredState() {

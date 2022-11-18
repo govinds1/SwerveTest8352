@@ -45,7 +45,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    m_swerveDrive.PrintRawAngles();
+    m_swerveDrive.PrintData();
   }
 
   /**

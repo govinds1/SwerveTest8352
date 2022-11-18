@@ -23,10 +23,11 @@ public class SwerveDrive {
     //Translation2d m_rightFrontLocation = new Translation2d(Calibrations.WHEELBASE_LENGTH / 2.0, Calibrations.WHEELBASE_WIDTH / 2.0);
     //Translation2d m_rightRearLocation = new Translation2d(-Calibrations.WHEELBASE_LENGTH / 2.0, Calibrations.WHEELBASE_WIDTH / 2.0);
 
-    Translation2d m_leftFrontLocation = new Translation2d(-Calibrations.WHEELBASE_WIDTH / 2.0, Calibrations.WHEELBASE_LENGTH / 2.0);
-    Translation2d m_leftRearLocation = new Translation2d(-Calibrations.WHEELBASE_WIDTH / 2.0, -Calibrations.WHEELBASE_LENGTH / 2.0);
-    Translation2d m_rightFrontLocation = new Translation2d(Calibrations.WHEELBASE_WIDTH / 2.0, Calibrations.WHEELBASE_LENGTH / 2.0);
-    Translation2d m_rightRearLocation = new Translation2d(Calibrations.WHEELBASE_WIDTH / 2.0, -Calibrations.WHEELBASE_LENGTH / 2.0);
+    // Robot Coords - +x is forward, +y is left
+    Translation2d m_leftFrontLocation = new Translation2d(Calibrations.WHEELBASE_WIDTH / 2.0, Calibrations.WHEELBASE_LENGTH / 2.0);
+    Translation2d m_leftRearLocation = new Translation2d(-Calibrations.WHEELBASE_WIDTH / 2.0, Calibrations.WHEELBASE_LENGTH / 2.0);
+    Translation2d m_rightFrontLocation = new Translation2d(Calibrations.WHEELBASE_WIDTH / 2.0, -Calibrations.WHEELBASE_LENGTH / 2.0);
+    Translation2d m_rightRearLocation = new Translation2d(-Calibrations.WHEELBASE_WIDTH / 2.0, -Calibrations.WHEELBASE_LENGTH / 2.0);
 
     SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(m_leftFrontLocation, m_leftRearLocation, m_rightFrontLocation, m_rightRearLocation);
     ChassisSpeeds m_desiredSpeeds;
@@ -52,33 +53,19 @@ public class SwerveDrive {
         m_leftRear.periodic();
         m_rightFront.periodic();
         m_rightRear.periodic();
-
-        // Dashboard prints
-        SmartDashboard.putNumber("Swerve/LeftFront/DesiredAngle", m_leftFront.GetDesiredState().angle.getDegrees());
-        SmartDashboard.putNumber("Swerve/LeftRear/DesiredAngle", m_leftRear.GetDesiredState().angle.getDegrees());
-        SmartDashboard.putNumber("Swerve/RightFront/DesiredAngle", m_rightFront.GetDesiredState().angle.getDegrees());
-        SmartDashboard.putNumber("Swerve/RightRear/DesiredAngle", m_rightRear.GetDesiredState().angle.getDegrees());
-        SmartDashboard.putNumber("Swerve/LeftFront/DesiredSpeed", m_leftFront.GetDesiredState().speedMetersPerSecond);
-        SmartDashboard.putNumber("Swerve/LeftRear/DesiredSpeed", m_leftRear.GetDesiredState().speedMetersPerSecond);
-        SmartDashboard.putNumber("Swerve/RightFront/DesiredSpeed", m_rightFront.GetDesiredState().speedMetersPerSecond);
-        SmartDashboard.putNumber("Swerve/RightRear/DesiredSpeed", m_rightRear.GetDesiredState().speedMetersPerSecond);
       }
 
     // Takes direct input from controller axes, handle conversions to real units and proper robot coordinates in this function
-    // Field coords: 
+    // ChassisSpeeds coords: 
     //      forward = +x
     //      right = -y
     //      turn = -omega (CCW (turning left) is positive)
-    // Robot coords:
-    //      forward = +y
-    //      right = +x
-    //      turn = +omega
     public void Drive(double forward, double right, double turn) {
         //Drive_WithMath(right, forward, turn);
         SetDesiredSpeeds(
             forward * Calibrations.MAX_FORWARD_SPEED,
             -right * Calibrations.MAX_STRAFE_SPEED,
-            -turn * Calibrations.MAX_TURN_SPEED
+            -turn * Calibrations.MAX_TURN_SPEED // rads per sec
         );
     }
 
@@ -181,8 +168,7 @@ public class SwerveDrive {
             vy = vx_robotY + vy_robotY;
         }*/
 
-        // Derivation of Inverse Kinematics Swerve Drive: https://www.chiefdelphi.com/uploads/default/original/3X/8/c/8c0451987d09519712780ce18ce6755c21a0acc0.pdf
-        // https://www.chiefdelphi.com/uploads/default/original/3X/e/f/ef10db45f7d65f6d4da874cd26db294c7ad469bb.pdf
+        // Derivation of Inverse Kinematics Swerve Drive found at: https://www.chiefdelphi.com/t/paper-4-wheel-independent-drive-independent-steering-swerve/107383
         // Calculate Inverse Kinematics equations
         double A = vx - omega * (Calibrations.WHEELBASE_LENGTH / 2);
         double B = vx + omega * (Calibrations.WHEELBASE_LENGTH / 2);
@@ -224,10 +210,37 @@ public class SwerveDrive {
         m_leftRear.SetDesiredState(v_rl, theta_rl);
         m_rightRear.SetDesiredState(v_rr, theta_rr);
     }
-    public void PrintRawAngles() {
-        SmartDashboard.putNumber("Swerve/LeftFront/RawAngle", m_leftFront.GetRawAngle());
-        SmartDashboard.putNumber("Swerve/LeftRear/RawAngle", m_leftRear.GetRawAngle());
-        SmartDashboard.putNumber("Swerve/RightFront/RawAngle", m_rightFront.GetRawAngle());
-        SmartDashboard.putNumber("Swerve/RightRear/RawAngle", m_rightRear.GetRawAngle());
+    public void PrintData() {
+        // Dashboard prints
+        SmartDashboard.putNumber("Swerve/LeftFront/EncoderRaw", m_leftFront.GetRaw());
+        SmartDashboard.putNumber("Swerve/LeftRear/EncoderRaw", m_leftRear.GetRaw());
+        SmartDashboard.putNumber("Swerve/RightFront/EncoderRaw", m_rightFront.GetRaw());
+        SmartDashboard.putNumber("Swerve/RightRear/EncoderRaw", m_rightRear.GetRaw());
+
+        SmartDashboard.putNumber("Swerve/LeftFront/Angle", m_leftFront.GetAngle().getDegrees());
+        SmartDashboard.putNumber("Swerve/LeftRear/Angle", m_leftRear.GetAngle().getDegrees());
+        SmartDashboard.putNumber("Swerve/RightFront/Angle", m_rightFront.GetAngle().getDegrees());
+        SmartDashboard.putNumber("Swerve/RightRear/Angle", m_rightRear.GetAngle().getDegrees());
+        
+        SwerveModuleState lf = m_leftFront.GetDesiredState();
+        SwerveModuleState lr = m_leftRear.GetDesiredState();
+        SwerveModuleState rf = m_rightFront.GetDesiredState();
+        SwerveModuleState rr = m_rightRear.GetDesiredState();
+        if (lf != null) {
+            SmartDashboard.putNumber("Swerve/LeftFront/DesiredAngle", lf.angle.getDegrees());
+            SmartDashboard.putNumber("Swerve/LeftFront/DesiredSpeed", lf.speedMetersPerSecond);
+        }
+        if (lr != null) {
+            SmartDashboard.putNumber("Swerve/LeftRear/DesiredAngle", lr.angle.getDegrees());
+            SmartDashboard.putNumber("Swerve/LeftRear/DesiredSpeed", lr.speedMetersPerSecond);
+        }
+        if (rf != null) {
+            SmartDashboard.putNumber("Swerve/RightFront/DesiredAngle", rf.angle.getDegrees());
+            SmartDashboard.putNumber("Swerve/RightFront/DesiredSpeed", rf.speedMetersPerSecond);
+        }
+        if (rr != null) {
+            SmartDashboard.putNumber("Swerve/RightRear/DesiredAngle", rr.angle.getDegrees());
+            SmartDashboard.putNumber("Swerve/RightRear/DesiredSpeed", rr.speedMetersPerSecond);
+        }
       }
 }
