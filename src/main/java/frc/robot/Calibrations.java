@@ -2,19 +2,19 @@ package frc.robot;
 
 public final class Calibrations {
     // Steer PID Values
-    public static final double STEER_P = 0;
+    public static final double STEER_P = 3;
     public static final double STEER_I = 0;
     public static final double STEER_D = 0;
 
     // Wheel angle zeros
-    public static int LEFT_FRONT_ZERO = 0;
-    public static int LEFT_REAR_ZERO = 0;
-    public static int RIGHT_FRONT_ZERO = 0;
-    public static int RIGHT_REAR_ZERO = 0;
+    public static int LEFT_FRONT_ZERO = 109;
+    public static int LEFT_REAR_ZERO = 200;
+    public static int RIGHT_FRONT_ZERO = -11;
+    public static int RIGHT_REAR_ZERO = -3;
 
     // Dimensions
-    public static final double WHEELBASE_LENGTH = 1.0; // From center of back wheel to center of front wheel, in feet
-    public static final double WHEELBASE_WIDTH = 1.0; // From center of left wheel to center of right wheel, in feet
+    public static final double WHEELBASE_LENGTH = 1.8; // From center of back wheel to center of front wheel, in feet
+    public static final double WHEELBASE_WIDTH = 1.75; // From center of left wheel to center of right wheel, in feet
     public static final double CHASSIS_LENGTH = 1.0; // Entire chassis length, including bumpers, in feet
     public static final double CHASSIS_WIDTH = 1.0; // Entire chassis width, including bumpers, in feet
 
@@ -24,5 +24,5 @@ public final class Calibrations {
     public static final double MAX_TURN_SPEED = 1.0; // rads per sec
 
     // Encoder Conversion
-    public static final double STEER_ENCODER_RADIAN_PER_PULSE = 360; // 1 / (pulse_per_motor_rot * gearRatio * 2 * PI)
+    public static final double STEER_ENCODER_RADIAN_PER_PULSE = 0.0157; // 1 / (pulse_per_motor_rot * gearRatio * 2 * PI)
 }

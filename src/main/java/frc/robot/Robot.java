@@ -44,7 +44,9 @@ public class Robot extends TimedRobot {
    * SmartDashboard integrated updating.
    */
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    m_swerveDrive.PrintRawAngles();
+  }
 
   /**
    * This autonomous (along with the chooser code above) shows how to select between different
@@ -91,6 +93,7 @@ public class Robot extends TimedRobot {
     double rot = m_xboxController.getRightX();
 
     m_swerveDrive.Drive(right, forward, rot);
+
   }
 
   /** This function is called once when the robot is disabled. */
@@ -109,3 +112,6 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {}
 }
+
+
+
